@@ -2,10 +2,10 @@ name: Rust Build Workflow
 
 on:
   push:
-    branches: [ main ]
-    tags: [ 'v*' ]
+    branches: [main]
+    tags: ['v*']
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
@@ -15,10 +15,10 @@ jobs:
       matrix:
         target: [x86_64-unknown-linux-gnu, x86_64-pc-windows-gnu]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3 # Updated to the latest version that supports Node.js 20
 
       - name: Install Rust target
-        uses: actions-rs/toolchain@v1
+        uses: actions-rs/toolchain@v2
         with:
           toolchain: stable
           target: ${{ matrix.target }}
@@ -29,13 +29,13 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y mingw-w64
 
       - name: Build
-        uses: actions-rs/cargo@v1
+        uses: actions-rs/cargo@v2
         with:
           command: build
           args: --release --target ${{ matrix.target }}
 
       - name: Archive and upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.target }}
           path: target/${{ matrix.target }}/release/
